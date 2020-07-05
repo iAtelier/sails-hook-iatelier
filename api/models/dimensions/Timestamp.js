@@ -1,4 +1,3 @@
-// user.js
 'use strict';
 
 const moment = require('moment');
