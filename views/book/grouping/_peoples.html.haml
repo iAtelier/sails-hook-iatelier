@@ -1,0 +1,7 @@
+%div{:class => ".c-card__item c-card__item--divider"} People related data
+- book.roles.each do |role|
+	.c-card__item
+		.os-form-group
+			%label #{role}:
+			%input{:id => role, :name => "people[#{role}]", :type => "text", :value => book.individuals(role).to_a.pluck(:identifier).join(', ')}
+		%div{:id => "#{role}-field", :class => "form-control select-correction"}

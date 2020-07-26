@@ -16,14 +16,14 @@ module.exports = function (sails) {
 		bcrypt = require('bcrypt');
 
 	const Book = require('./api/models/Book');
-	const User = require('./api/models/User');
+	const Editor = require('./api/models/Editor');
 	const Bundle = require('./api/models/groupings/Bundle');
 
 	passport.serializeUser(function(user, done) {
 		done(null, user.get('id'));
 	});
 	passport.deserializeUser(function(id, done) {
-		User.forge({id: id})
+		Editor.forge({id: id})
 			.fetch()
 			.then((usr) => {
 				done(null, usr);
@@ -36,8 +36,10 @@ module.exports = function (sails) {
 			passwordField: 'password'
 		},
 		function(username, password, done) {
-			sails.log('calling the function');
-			User.forge({ email: username })
+			sails.log('Passport::calling the function checking for username & password');
+			sails.log(username);
+			sails.log(password);
+			Editor.forge({ email: username })
 				.fetch()
 				.then((usr) => {
 					sails.log('check pass');

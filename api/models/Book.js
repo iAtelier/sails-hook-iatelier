@@ -218,14 +218,14 @@ var Book = sails.hooks.borm.bookshelf.model(
 
 		setupCover(input) {
 			if ( !_.values(input).every(_.isEmpty) ) {
-				let name = (input.name) ? input.name : null,
+				let file = (input.file) ? input.file : null,
 					path = (input.path) ? input.path : null,
-					photographer = (input.photographer) ? input.photographer : null,
+					illustrator = (input.illustrator) ? input.illustrator : null,
 					link = (input.link) ? input.link : null;
 				return this.cover().save({
-					name: name,
 					path: path,
-					photographer: photographer,
+					file: file,
+					illustrator: illustrator,
 					link: link
 				});
 			} else {
@@ -233,16 +233,16 @@ var Book = sails.hooks.borm.bookshelf.model(
 			}
 		},
 		reviseCover(input) {
-			let name = (input.name) ? input.name : null,
+			let file = (input.file) ? input.file : null,
 				path = (input.path) ? input.path : null,
-				photographer = (input.photographer) ? input.photographer : null,
+				illustrator = (input.illustrator) ? input.illustrator : null,
 				link = (input.link) ? input.link : null;
 
 			return this.load('cover').then(model => {
 				model.related('cover').save({
-					name: name,
+					file: file,
 					path: path,
-					photographer: photographer,
+					illustrator: illustrator,
 					link: link
 				});
 				return model;

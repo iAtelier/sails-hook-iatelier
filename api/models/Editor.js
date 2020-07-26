@@ -11,7 +11,7 @@ function hashPassword(values, next) {
 }
 
 module.exports = sails.hooks.borm.bookshelf.Model.extend({
-	tableName: 'users',
+	tableName: 'editors',
 	initialize: function() {
 	  this.on('creating', this.encryptPassword);
 	},
@@ -55,7 +55,7 @@ module.exports = sails.hooks.borm.bookshelf.Model.extend({
 	// 	});
 	//   });
 	// }
-  });
+});
 
 
 // module.exports = {

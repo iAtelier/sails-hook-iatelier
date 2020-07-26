@@ -1,0 +1,42 @@
+.panel-edit
+	- if @locals.include?(:errors)
+		.form-box
+			.os-form-group
+				- errors.each do |value, key|
+					%p= value
+					%p= key
+	.form-box
+		.os-form-group
+			-if book.dimensions.include? 'title'
+				%label.label Title
+				%input{:class => "form-control pure-input-1", :name => "title", :type => "text", :placeholder => "Title", :value => book.title.try(:value)}
+		.os-form-group
+			-if book.dimensions.include? 'slug'
+				%label.label Slug
+				%input{:class => "form-control pure-input-1", :name => "slug", :type => "text", :placeholder => "Slug", :value => book.slug.try(:value)}
+		.os-form-group
+			-if book.dimensions.include? 'subtitle'
+				%label.label Subtitle
+				%input{:class => "form-control pure-input-1", :name => "subtitle", :type => "text", :placeholder => "Subtitle", :value => book.subtitle.try(:value)}
+		.os-form-group
+			-if book.dimensions.include? 'description'
+				%label.label Description
+				%input{:class => "form-control pure-input-1", :name => "description", :type => "text", :placeholder => "Description", :value => book.description.try(:value)}
+		.os-form-group
+			%label.label Attachments
+			%input{:type => 'file', :id => 'file', :name => 'file'}
+	.form-box
+		%label Text
+		%br
+		%textarea{:name => "content", :class => "text-editor pure-input-1 form-control", :type => "text", :placeholder => "Content of the book ...", :style => "width: 100%"}
+			-unless book.content_raw.nil?
+				= book.content_raw
+%div{:class => "grid-large panel-edit"}
+	.form-box
+		= render :partial => 'grouping/keywords'
+	.form-box
+		= render :partial => 'grouping/peoples'
+	.form-box
+		= render :partial => 'grouping/bundles'
+	.form-box
+		= render :partial => 'dimension/timestamp'

@@ -1,0 +1,18 @@
+<header>Dates</header>
+<div class="c-card__item pure-control-group">
+	<div class="os-form-group">
+		<label>Draft: </label>
+		<input class="flatpickr form-control" name="timestamp[draft]" type="text"
+			value="<%= book.related('timestamp').get('draft') ? book.related('timestamp').m(book.related('timestamp').get('draft')).format('YYYY-MM-DD HH:mm:ss') : '' %>">
+	</div>
+	<div class="os-form-group">
+		<label>Publish: </label>
+		<input class="flatpickr form-control" name="timestamp[publish]" type="text"
+			value="<%= book.related('timestamp').get('publish') ? book.related('timestamp').m(book.related('timestamp').get('publish')).format('YYYY-MM-DD HH:mm:ss') : '' %>">
+	</div>
+	<div class="os-form-group">
+		<label>Amend: </label>
+		<input class="flatpickr form-control" name="timestamp[amend]" type="text"
+			value="<%= book.related('timestamp').get('amend') ? book.related('timestamp').m(book.related('timestamp').get('amend')).format('YYYY-MM-DD HH:mm:ss') : '' %>">
+	</div>
+</div>

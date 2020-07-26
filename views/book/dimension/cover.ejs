@@ -1,0 +1,20 @@
+<% if ( model.DIMENSIONS.includes('cover') ) { %>
+	<div>
+		<label class="c-card__item c-card__item--divider" for="accordion-2">Cover</label>
+				
+		<div class="pure-group c-card__item">
+				<input class="form-control" placeholder="<path>" class="form-control" 
+					type="text" name="cover[path]" 
+					value="<%= book.related('cover').get('path') %>">
+				<input class="form-control" placeholder="<file.extention>" class="form-control"
+					type="text" name="cover[file]" 
+					value="<%= book.related('cover').get('file') %>">
+				<input class="form-control" placeholder="Illustrator" class="form-control" 
+					type="text" name="cover[illustrator]" 
+					value="<%= book.related('cover').get('illustrator') %>">
+				<input class="form-control" placeholder="Link to illustrator's profile" class="form-control" 
+					type="text" name="cover[link]" 
+					value="<%= book.related('cover').get('link') %>">
+		</div>
+	</div>	
+<% } %>

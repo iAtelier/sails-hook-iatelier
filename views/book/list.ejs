@@ -1,0 +1,17 @@
+<%- partial('../layout/h.ejs') %>
+<div id="list" class="">
+<h1>all published <%= book_type %></h1>
+<table>
+    <tr>
+        <td>ID</td>
+        <td>title</td>
+    </tr>
+    <%  _.each(books.models, function(book) { %>
+        <tr>
+            <td><%= book.get('id') %></td>
+            <td><%- book.related('title').get('value') %></td>
+        </tr>
+    <% }); %>
+</table>
+</div>
+<%- partial('../layout/f.ejs') %>

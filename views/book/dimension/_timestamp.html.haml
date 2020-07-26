@@ -1,0 +1,11 @@
+%header Dates
+%div{:class => "c-card__item pure-control-group"}
+	.os-form-group
+		%label Draft:
+		%input{:class => "flatpickr form-control", :name => "timestamp[draft]", :type => "datetime-local", :value => book.timestamp.try(:draft)}
+	.os-form-group
+		%label Publish:
+		%input{:class => "flatpickr form-control", :name => "timestamp[publish]", :type => "datetime-local", :value => book.timestamp.try(:publish)}
+	.os-form-group
+		%label Amend:
+		%input{:class => "flatpickr form-control", :name => "timestamp[amend]", :type => "datetime-local", :value => book.timestamp.try(:amend)}

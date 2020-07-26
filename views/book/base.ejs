@@ -1,0 +1,59 @@
+<div class="panel-edit">
+	<div class="form-box">
+		<% if ( model.DIMENSIONS.includes('title') ) { %>
+			<div class="os-form-group">
+				<label class="label">Title: </label>
+				<input class="form-control" name="title" type="text" class="pure-input-1 form-control" placeholder="Title" value="<%= book.related('title').get('value') %>">
+			</div>
+		<% } %>
+
+		<% if ( model.DIMENSIONS.includes('subtitle') ) { %>
+			<div class="os-form-group">
+				<label class="label">Subtitle: </label>
+				<input class="form-control" name="subtitle" type="text" class="pure-input-1 form-control" placeholder="Subtitle" value="<%= book.related('subtitle').get('value') %>">
+			</div>
+		<% } %>
+			
+		<% if ( model.DIMENSIONS.includes('slug') ) { %>
+			<div class="os-form-group">
+				<label class="label">Slug</label>
+				<input class="form-control" name="slug" type="text" class="pure-input-1 form-control" placeholder="Slug" value="<%= book.related('slug').get('value') %>">
+			</div>
+		<% } %>
+
+		<% if ( model.DIMENSIONS.includes('description') ) { %>
+			<div class="os-form-group">
+				<label class="label">Description: </label>
+				<textarea name="description" class="pure-input-1 form-control" type="text" placeholder="Description">
+					<%= book.related('description').get('value') %>
+				</textarea>
+			</div>
+		<% } %>
+		
+		<div class="form-box"> 
+            <label>Text</label><br />
+			<textarea name="content"
+				style="width: 95%; margin: auto;"
+				class="text-editor pure-input-1 form-control" type="text" 
+				placeholder="Content of the book ..." ><%= book.contentRaw() %></textarea>
+        </div>
+	</div>
+</div>
+
+
+<div class="grid-large panel-edit">
+	
+	<div class="form-box">
+		<%- partial('dimension/cover.ejs') %>
+	</div>
+	
+	<div class="form-box">
+		<%- partial('dimension/timestamp.ejs') %>
+	</div>
+	
+	<!-- @foreach( $book->groupings as $grouping ) -->
+		<div class="form-box">
+			<!-- @include('atelier::production.form.component.' . $grouping) -->
+		</div>
+	<!-- @endforeach -->
+</div>

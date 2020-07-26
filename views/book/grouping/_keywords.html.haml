@@ -1,0 +1,5 @@
+%div{:class => "c-card__item c-card__item--divider"}
+	%div{:class => "c-card__item"}
+		%label Keywords
+		%input{:id => "keywords", :name => "keywords", :value => book.keywords.pluck(:word).join(", ")}
+		%div{:id => "keywords-field", :name => "keywords", :type => "text", :style => "width: 100%; display: block;"}
