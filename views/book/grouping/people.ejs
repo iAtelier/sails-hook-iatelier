@@ -1,0 +1,11 @@
+<div class=".c-card__item c-card__item--divider">
+	People related data
+	<%- model.GROUPINGS.people.forEach(role = { %>
+		<div class="c-card__item">
+			<div class="os-form-group">
+				<label><%= role %></label>
+				<input id="role" name="people[<%= role %>]" type="text" value="to be announced!">
+			</div>
+		</div>
+	<%- }) %>
+</div>

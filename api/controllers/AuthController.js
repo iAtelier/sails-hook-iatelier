@@ -2,6 +2,7 @@ const passport = require('passport');
 
 module.exports = {
 	login: function(req, res) {
+		sails.log('traying to login')
 		passport.authenticate(
 			'local', 
 			function(err, user, info) {
