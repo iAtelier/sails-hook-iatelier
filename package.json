@@ -1,8 +1,24 @@
 {
   "name": "@iatelier/sails-hook-iatelier",
-  "version": "0.4.0",
-  "description": "",
+  "version": "0.4.2",
+  "description": "Core library for iAtelier content management system as a package for your Sails-js application",
   "main": "index.js",
+  "author": "Captain Husayn Pinguin <captainhusaynpinguin@vitualizer.xyz> (https://rarehusayn.xyz/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://vitualizersgit.xyz/iatelier/sails/iatelier.git"
+  },
+  "bugs": {
+    "url": "https://vitualizersgit.xyz/iatelier/sails/iatelier/-/issues"
+  },
+  "homepage": "https://iatelier.piratesatelier.xyz",
+  "keywords": [
+    "CMS",
+    "open-source CMS",
+    "Sailsjs CMS",
+    "sailsjs"
+  ],
   "sails": {
     "isHook": true,
     "hookName": "iatelier"
@@ -14,15 +30,14 @@
     "hot": "NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "production": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
-  "author": "Captain Husayn Pinguin",
-  "license": "MIT",
   "dependencies": {
-    "@iatelier/sails-hook-borm": "0.0.2",
+    "@iatelier/sails-hook-borm": "0.0.3",
     "bcrypt": "^4.0.1",
     "formidable": "2.0.0-canary.20200504.1",
     "lodash": "^4.17.15",
     "lodash.merge": "^4.6.2",
-    "markdown-it": "^10.0.0",
+    "markdown-it": "^11.0.0",
+    "markdown-it-footnote": "^3.0.2",
     "moment": "^2.25.1",
     "passport": "^0.4.1",
     "passport-http": "^0.3.0",

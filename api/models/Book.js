@@ -289,7 +289,8 @@ var Book = sails.hooks.borm.bookshelf.model(
 			}
 		},
 		content() {
-			let md = new MarkdownIt(({html:true,}));
+			let md = new MarkdownIt(({html:true,}))()
+				.use(require('markdown-it-footnote'));;
 			let content = this.contentRaw();
 			if ( content ) {
 				return md.render(content);
