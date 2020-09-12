@@ -103,7 +103,7 @@ module.exports = function (sails) {
 	//   mockSexy
 	// );
 	
-	// sails.config.policies['ibooks/*'] = 'authenticated';
+	sails.config.policies['ibooks/*'] = 'authenticated';
 	
 	
 	return {

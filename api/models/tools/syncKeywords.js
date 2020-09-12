@@ -34,8 +34,8 @@ module.exports = async function (self, inputs) {
 				keywordable_type: modelName,
 				keywordable_id: self.id,
 			})
-			.then( (r) => { return r; } )
-			.catch( (e) => { sails.log(e); } );
+			.then( (r) => { sails.log('then'); return r; } )
+			.catch( (e) => { sails.log('error', e); } );
 	
 		for (const node of nodes) {
 			// sails.log('this is OUR NODE', node)
@@ -53,7 +53,10 @@ module.exports = async function (self, inputs) {
 		}
 	}
 	
-	let existingNodes = await self.keywords().then( r => { return r; } );
+	let existingNodes = await self.keywords()
+		.then( r => { sails.log('we got the nodes'); return r; } )
+		.catch( e => { sails.log('error', e); } );
+
 	existingNodes = existingNodes.pluck('word');
 	sails.log('existing array of keywords = ', existingNodes)
 
