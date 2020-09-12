@@ -5,13 +5,17 @@ let Timestamp = require('./dimensions/Timestamp');
 let Description = require('./dimensions/Description');
 let Cover = require('./dimensions/Cover');
 
-let Keyword = require('./groupings/Keyword');
 let People = require('./groupings/People');
 
 const v = require('voca');
 const fs = require("fs");
 var MarkdownIt = require('markdown-it');
 const moment = require('moment');
+const { result } = require('lodash');
+
+var morphedByMany = require('./tools/morphMany.js');
+var syncBundles = require('./tools/syncBundles.js');
+var syncKeywords = require('./tools/syncKeywords.js');
 
 var Book = sails.hooks.borm.bookshelf.model(
 	'Book',
@@ -72,92 +76,23 @@ var Book = sails.hooks.borm.bookshelf.model(
 			return this.morphOne('Cover', 'coverable', ['coverable_type', 'coverable_id'])
 		},
 		async keywords() {
-			
-			const Keyword = sails.hooks.borm.bookshelf.model('Keyword');
-		
-			let type = this.virtuals.kind() + 's';
-		
-			var getKeywords = async function(array) {
-				const Model = sails.hooks.borm.bookshelf.model('Keyword');
-				let keywords = {};
-				for (const [id, value] of Object.entries(array) ) {
-					keywords[id] = await Model.forge({id: value.keyword_id })
-						.fetch()
-						.then(model => { return model; });
-				}
-				return keywords;
-			}
-		
-			let result = await sails.hooks.borm.bookshelf.knex('keywordables')
-				.where({
-					keywordable_type: type,
-					keywordable_id: this.id,
-				}).select('keyword_id').then(getKeywords);
-			
-			return result;
+			return morphedByMany(this, 'keyword', 'keywordable');
 		},
 		async bundle(type) {
-			
-			const Model = sails.hooks.borm.bookshelf.model('Bundle');
-		
-			let modelName = this.virtuals.kind() + 's';
-		
-			var getModels = async function(array) {
-				const Model = sails.hooks.borm.bookshelf.model('Bundle');
-				// const ModelSet = sails.hooks.borm.bookshelf.collection('BundleSet', {
-				// 	model: Model
-				// });
-				// var models = new ModelSet();
-				var models = [];
-				for (const [id, value] of Object.entries(array) ) {
-					let model = await Model.forge({id: value.bundle_id }).fetch().then(model => { return model; });
-					if ( model.get('type') == type )
-					{
-						models.push(model);
-					}
-				}
-				return models;
-			}
-		
-			let result = await sails.hooks.borm.bookshelf.knex('bundleables')
-				.where({
-					bundleable_type: modelName,
-					bundleable_id: this.id,
-				}).select('bundle_id').then(getModels);
-			
-			return result;
+			const Model = sails.hooks.borm.bookshelf.model('bundle');
+
+			let bundles = await morphedByMany(this, 'bundle', 'bundleable');
+
+			return bundles.find(function(item) { return (item.get('type') == type ) });;
 		},
-		async individuals(role) {
+		async people(role) {
+
+			const Model = sails.hooks.borm.bookshelf.model('people');
+
+			let roles = await morphedByMany(this, 'people', 'peopleable', {role: role});
 			
-			// sails.log('starting to get individuals for the role: ', role);
-			
-			const Model = sails.hooks.borm.bookshelf.model('People');
-			
-			let modelName = this.virtuals.kind() + 's';
-		
-			var getModels = async function(array) {
-				const Model = sails.hooks.borm.bookshelf.model('People');
-				var models = [];
-				// sails.log('our entry array is equal to: ', array);
-				for (const [id, value] of Object.entries(array) ) {
-					// sails.log('the id = ', id)
-					// sails.log('the value = ', value)
-					let model = await Model.forge({id: value.people_id }).fetch().then(model => { return model; });
-					models.push(model);
-				}
-				return models;
-			}
-		
-			let result = await sails.hooks.borm.bookshelf.knex('peopleables')
-				.where({
-					peopleable_type: modelName,
-					peopleable_id: this.id,
-					role: role
-				}).select('people_id').then(getModels);
-			
-			return result;
+			return roles;
 		},
-		
 		setupTitle(input) {
 			if (input) {
 				return this.title().save({value: input});
@@ -248,7 +183,7 @@ var Book = sails.hooks.borm.bookshelf.model(
 		},
 
 		setupCover(input) {
-			if ( !_.values(input).every(_.isEmpty) ) {
+			if ( !_.values(input).every( v => { _.isEmpty(v)} ) ) {
 				let file = (input.file) ? input.file : null,
 					path = (input.path) ? input.path : null,
 					illustrator = (input.illustrator) ? input.illustrator : null,
@@ -263,21 +198,27 @@ var Book = sails.hooks.borm.bookshelf.model(
 				return this;
 			}
 		},
-		reviseCover(input) {
-			let file = (input.file) ? input.file : null,
-				path = (input.path) ? input.path : null,
-				illustrator = (input.illustrator) ? input.illustrator : null,
-				link = (input.link) ? input.link : null;
-
-			return this.load('cover').then(model => {
-				model.related('cover').save({
-					file: file,
+		async reviseCover(input) {
+			if ( !_.values(input).every( v => { return _.isEmpty(v) } ) ) {
+				sails.log('baby we are doing it!')
+				let file = (input.file) ? input.file : null,
+					path = (input.path) ? input.path : null,
+					illustrator = (input.illustrator) ? input.illustrator : null,
+					link = (input.link) ? input.link : null;
+				return this.cover().save({
 					path: path,
+					file: file,
 					illustrator: illustrator,
 					link: link
 				});
-				return model;
-			});
+			} else if ( _.values(input).every( v => { sails.log('2: the value = ', v); return _.isEmpty(v)} ) && this.cover() ) {
+				let cover = await this.cover().fetch().then( r => { return r; } );
+				sails.log('deleting the thing!')
+				return cover.destroy().then( r => { sails.log('deleted!'); return r; })
+			}
+			else {
+				return this;
+			}
 		},
 
 		contentRaw() {
@@ -289,7 +230,7 @@ var Book = sails.hooks.borm.bookshelf.model(
 			}
 		},
 		content() {
-			let md = new MarkdownIt(({html:true,}))()
+			let md = new MarkdownIt(({html:true,}))
 				.use(require('markdown-it-footnote'));;
 			let content = this.contentRaw();
 			if ( content ) {
@@ -318,6 +259,90 @@ var Book = sails.hooks.borm.bookshelf.model(
 			return r;
 		},
 
+		async syncKeywords(input) {
+			let keywords = input.keywords.split(", ");
+			sails.log('what are our keywords = ', keywords)
+			syncKeywords(this, keywords);
+		},
+		async syncBundles(input) {
+			let modelName = this.virtuals.kind() + 's';
+			let bundles = input.bundles;
+			
+			const unsync = function (self, ids) {
+				for ( const id of ids ) {
+					sails.hooks.borm.bookshelf.knex('bundleables').del().where({
+						bundleable_id: self.id,
+						bundleable_type: modelName,
+						bundle_id: id
+					})
+						.then((node) => { sails.log('deleted!'); })
+						.catch((e) => { sails.log("couldn't delete!"); })
+				}
+			}
+			const deleteExtras = async function (self, truthSource) {
+				console.log('our source of truth is', truthSource)
+				let nodes = await sails.hooks.borm.bookshelf.knex('bundleables').where({
+					bundleable_type: modelName,
+					bundleable_id: self.id,
+				})
+				.then((r) => { return r; })
+				.catch((e) => { sails.log(e)})
+				for (const node of nodes) {
+					sails.log('this is OUR NODE', node)
+					let check = node.bundle_id;
+					if ( !truthSource.includes(node.bundle_id) ) {
+						sails.log(node.bundle_id)
+						sails.hooks.borm.bookshelf.knex('bundleables').del().where({
+							id: node.id
+						})
+							.then((node) => { sails.log('deleted!'); })
+							.catch((e) => { sails.log("couldn't delete!"); })
+					}
+				}
+			}
+
+			let mockBundles = [];
+			
+			for (const [type, node] of Object.entries(bundles)) {
+				sails.log('here is the bundle input we are going through = ', type, node)
+				let currentBundle = await this.bundle(type).then(r => { return r; }).catch(e => { return null; })
+				if ( currentBundle) {
+					sails.log('here is our current bundle = ', currentBundle)
+					if (currentBundle.id == node ) {
+						sails.log('Bundle-node with the id _ already exists.', node)
+						mockBundles.push(Number(node));
+					} else if (node) {
+						currentBundle = await sails.hooks.borm.bookshelf.knex('bundleables')
+						.where({
+							bundle_id: currentBundle.id,
+							bundleable_type: modelName,
+							bundleable_id: this.id,
+						}).update({
+							bundle_id: node,
+							updated_at: require('moment')().format('YYYY-MM-DD HH:mm:ss')
+						})
+							.then((r) => { sails.log("updated the bundle-node"); return r; })
+							.catch((e) => { sails.log("couldn't update"); })
+						mockBundles.push(Number(node));
+					}
+				} else if (node) {
+					sails.log('creating the node for bundle = ', node);
+					currentBundle = await sails.hooks.borm.bookshelf.knex('bundleables').insert({
+						bundle_id: node,
+						bundleable_type: modelName,
+						bundleable_id: this.id,
+						created_at: require('moment')().format('YYYY-MM-DD HH:mm:ss'),
+						updated_at: require('moment')().format('YYYY-MM-DD HH:mm:ss')
+					}).then((r) => {
+						sails.log('inserted the record')
+						return r;
+					});
+					mockBundles.push(Number(node));
+				}
+			}
+			deleteExtras(this,mockBundles)
+		},
+
 		async syncIndividuals(input) {
 
 			let modelName = this.virtuals.kind() + 's';
@@ -334,7 +359,7 @@ var Book = sails.hooks.borm.bookshelf.model(
 				
 				// Deleting the nodes that exit in our database but weren't resent by iAteler
 				sails.log('checking for nodes to delete!')
-				var existingNodes = await this.individuals(role).then(models => { return models; });
+				var existingNodes = await this.people(role).then(r => {return r;});
 				for (const node of existingNodes) {
 					var toDelete = true;
 					for (const individual of individuals) {
@@ -365,7 +390,7 @@ var Book = sails.hooks.borm.bookshelf.model(
 					}
 					if ( !exists ) {
 						sails.log('syncing the individual = ', individual)
-						const People = sails.hooks.borm.bookshelf.model('People');
+						const People = sails.hooks.borm.bookshelf.model('people');
 						
 						// retriving if a record existing in our database
 						person = await People.where({'identifier': individual}).fetch()
@@ -410,7 +435,9 @@ var Book = sails.hooks.borm.bookshelf.model(
 				this[functionName](inputs[dimension]);
 			}
 
-			this.syncIndividuals(inputs)
+			// this.syncIndividuals(inputs)
+			// this.syncBundles(inputs)
+			this.syncKeywords(inputs)
 		}
 	},
 	{

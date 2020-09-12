@@ -18,6 +18,8 @@ module.exports = function (sails) {
 	const Book = require('./api/models/Book');
 	const Editor = require('./api/models/Editor');
 	const Bundle = require('./api/models/groupings/Bundle');
+	const Keyword = require('./api/models/groupings/Keyword');
+	const People = require('./api/models/groupings/People');
 
 	passport.serializeUser(function(user, done) {
 		done(null, user.get('id'));
@@ -101,7 +103,7 @@ module.exports = function (sails) {
 	//   mockSexy
 	// );
 	
-	sails.config.policies['ibooks/*'] = 'authenticated';
+	// sails.config.policies['ibooks/*'] = 'authenticated';
 	
 	
 	return {

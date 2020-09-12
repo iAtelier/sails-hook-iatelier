@@ -1,5 +1,5 @@
 
-let Keyword = sails.hooks.borm.bookshelf.model('Keyword', {
+let Keyword = sails.hooks.borm.bookshelf.model('keyword', {
     tableName: 'keywords',
     hasTimestamps: true,
     keywordable() {

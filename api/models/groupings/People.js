@@ -1,4 +1,4 @@
-let People = sails.hooks.borm.bookshelf.model('People', {
+let People = sails.hooks.borm.bookshelf.model('people', {
     tableName: 'peoples',
     hasTimestamps: true,
     peopleable() {
@@ -7,4 +7,3 @@ let People = sails.hooks.borm.bookshelf.model('People', {
 });
 
 module.exports = People;
-

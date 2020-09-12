@@ -1,7 +1,6 @@
 let Book = require('../Book');
 
-module.exports = sails.hooks.borm.bookshelf.model(
-	'Bundle',
+module.exports = sails.hooks.borm.bookshelf.model('bundle',
 	sails.hooks.borm.bookshelf.model('Book').extend({
 		tableName: 'bundles',
 		hasTimestamps: true,
