@@ -1,6 +1,6 @@
 {
   "name": "@iatelier/sails-hook-iatelier",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Core library for iAtelier content management system as a package for your Sails-js application",
   "main": "index.js",
   "author": "Captain Husayn Pinguin <captainhusaynpinguin@vitualizer.xyz> (https://rarehusayn.xyz/)",
