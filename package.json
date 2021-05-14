@@ -1,5 +1,5 @@
 {
-  "name": "@vatelier/sails-hook-vatelier",
+  "name": "@vatelier/sails-hook-atelier",
   "version": "0.6.2",
   "description": "Core library for iAtelier content management system as a package for your Sails-js application",
   "main": "index.js",
