@@ -1,6 +1,6 @@
 {
   "name": "@vatelier/sails-hook-atelier",
-  "version": "0.6.2",
+  "version": "0.6.4",
   "description": "Core library for iAtelier content management system as a package for your Sails-js application",
   "main": "index.js",
   "author": "Captain Husayn Penguin <chp@vituailzergalaxy.xyz> (https://rarehusayn.xyz/)",
@@ -31,8 +31,8 @@
     "production": "NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "dependencies": {
-    "@iatelier/sails-hook-borm": "0.0.3",
-    "bcrypt": "^4.0.1",
+    "@vatelier/sails-hook-aborm": "0.0.3",
+    "bcrypt-nodejs": "^0.0.3",
     "formidable": "2.0.0-canary.20200504.1",
     "install": "^0.13.0",
     "lodash": "^4.17.15",
@@ -51,6 +51,7 @@
     "voca": "^1.4.0"
   },
   "devDependencies": {
+    "bcrypt": "3.0.4",
     "@piratesatelier/os-ui-oldschool": "*",
     "babel-cli": "*",
     "babel-core": "*",
